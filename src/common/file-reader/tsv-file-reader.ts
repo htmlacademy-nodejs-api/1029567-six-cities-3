@@ -23,7 +23,7 @@ export default class TSVFileReader implements FileReaderInterface {
       .split('\n')
       .filter((row) => row.trim() !== '')
       .map((line) => line.split('\t'))
-      .map(([title, description, createdDate, city, previewImage, offerImages, isPremium, isFavorites, rating, type, roomCount, guestsCount, price, facilities, name, email, avatarPath, password, userType,commentCount, coordinates]) => ({
+      .map(([title, description, createdDate, city, previewImage, offerImages, isPremium, isFavorites, rating, type, roomCount, guestsCount, price, facilities, name, email, avatarPath, password, userType,commentCount, latitude, longitude]) => ({
         title,
         description,
         postDate: new Date(createdDate),
@@ -41,7 +41,10 @@ export default class TSVFileReader implements FileReaderInterface {
           .map((x) => FacilitiesType[x as 'Breakfast' | 'AirConditioning' | 'LaptopFriendlyWorkspace' | 'BabySeat' | 'Washer' | 'Towels' | 'Fridge']),
         user: { name, email, avatarPath, password, userType: UserType[userType as 'normal' | 'pro'] },
         commentCount: Number.parseInt(commentCount, 10),
-        coordinates: coordinates.split(';'),
+        coordinates: {
+          latitude: latitude,
+          longitude: longitude,
+        },
       }));
   }
 }
