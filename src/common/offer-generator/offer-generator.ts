@@ -3,9 +3,9 @@ import { MockData } from '../../types/mock-data.type.js';
 import { OfferType } from '../../types/offer-type.enum.js';
 import { generateRandomValue, getRandomItem, getRandomItems } from '../../utils/random.js';
 import { OfferGeneratorInterface } from './offer-generator.interface.js';
-import { FacilitiesType } from '../../types/offer-facilities.enum';
-import { Coordinate } from '../../types/coordinate.type';
-import { UserType } from '../../types/user-type.enum';
+import { FacilitiesType } from '../../types/offer-facilities.enum.js';
+import { Coordinate } from '../../types/coordinate.type.js';
+import { UserType } from '../../types/user-type.enum.js';
 import {
   MIN_RATING,
   MAX_RATING,
