@@ -1,0 +1,96 @@
+{
+  "api": {
+    "titles": [
+      "apartment rent",
+      "house rent",
+      "room rent",
+      "townhouse rent",
+      "house rent near the forest",
+      "townhouse rent near the lake",
+      "townhouse rent near the city",
+      "apartment rent near the center"
+    ],
+    "descriptions": [
+      "Wonderful house is located near the forest and the lake",
+      "The apartments are located in the city center, newly renovated, everything you need is close to the location",
+      "The room is located in a three-room apartment in the city center",
+      "Townhouse located near the city center"
+    ],
+    "cities": [
+      "Paris",
+      "Cologne",
+      "Brussels",
+      "Amsterdam",
+      "Hamburg",
+      "Dusseldorf"
+    ],
+    "previewImages": [
+      "image-1.jpg",
+      "image-2.jpg",
+      "image-3.jpg",
+      "image-4.jpg",
+      "image-5.jpg",
+      "image-6.jpg"
+    ],
+    "offerImages": [
+      "offer-image-1.jpg",
+      "offer-image-2.jpg",
+      "offer-image-3.jpg",
+      "offer-image-4.jpg",
+      "offer-image-5.jpg",
+      "offer-image-6.jpg"
+    ],
+    "names": [
+      "Stepan",
+      "Harry",
+      "Tanya",
+      "Ivan"
+    ],
+    "emails": [
+      "test001@mail.ru",
+      "test002@mail.ru",
+      "test003@mail.ru",
+      "test004@mail.ru",
+      "test005@mail.ru"
+    ],
+    "avatarPaths": [
+      "scr/test-1.png",
+      "scr/test-2.png",
+      "scr/test-3.png",
+      "scr/test-4.png",
+      "scr/test-5.png"
+    ],
+    "passwords": [
+      "123456",
+      "1234567",
+      "12345678",
+      "123456789"
+    ],
+    "coordinates": [
+      {
+        "latitude": 48.85661,
+        "longitude": 2.351499
+      },
+      {
+        "latitude": 50.938361,
+        "longitude": 6.959974
+      },
+      {
+        "latitude": 50.846557,
+        "longitude": 4.351697
+      },
+      {
+        "latitude": 52.370216,
+        "longitude": 4.895168
+      },
+      {
+        "latitude": 53.550341,
+        "longitude": 10.000654
+      },
+      {
+        "latitude": 51.225402,
+        "longitude": 6.776314
+      }
+    ]
+  }
+}
