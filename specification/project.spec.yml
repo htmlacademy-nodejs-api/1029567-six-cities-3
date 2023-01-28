@@ -1,0 +1,515 @@
+openapi: 3.0.0
+info:
+  title: API сервер для проекта six-cities.
+  description: |-
+    * Список ресурсов и маршрутов сервера six-cities.
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+  version: '1.0.0'
+tags:
+  - name: offers
+    description: Действия с объявлениями.
+  - name: users
+    description: Действия с пользователями.
+  - name: comments
+    description: Действия с комментариями.
+
+paths:
+  /offers:
+    get:
+      tags:
+        - offers
+      summary: Загрузить список объявлений.
+      description: Загружает список объявлений (не больше 60 объявлений по умолчанию, получение другого числа объявлений осуществляется в параметре запроса).
+
+      responses:
+        "200":
+          description: Объекты объявлений.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/offer'
+
+    post:
+      tags:
+        - offers
+      summary: Создание нового объявления.
+      description: Создает новое объявление (доступно только для авторизованных пользователей).
+
+      requestBody:
+        description: Информация для создания объявления.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/offer'
+        required: true
+
+      responses:
+        "201":
+          description: Объявление создано. Объект объявления.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/offer'
+
+        "400":
+          description: Объявление не прошло валидацию.
+
+        "401":
+          description: Пользователь не авторизован.
+
+  /offers/{offerId}:
+    parameters:
+      - in: path
+        name: offerId
+        required: true
+        schema:
+          type: integer
+          minimum: 1
+
+    get:
+      tags:
+        - offers
+      summary: Загрузить определенное объявление.
+      description: Возвращает информацию по объявлению.
+
+      responses:
+        "200":
+          description: Объект объявления.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/offer'
+
+    put:
+      tags:
+        - offers
+      summary: Редактирование существующего объявления пользователя.
+      description: Редактирует существующее объявление пользователя (Доступно только для авторизованного пользователя, объявление создано данным пользователем).
+
+      requestBody:
+        description: Информация для редактирования объявления.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/offer'
+        required: true
+
+      responses:
+        "201":
+          description: Объявление отредактировано. Объект объявления.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/offer'
+
+        "400":
+          description: Объявление не прошло валидацию.
+
+        "401":
+          description: Пользователь не авторизован.
+
+        "403":
+          description: Пользователь не обладает правами для изменения объявления.
+
+    delete:
+      tags:
+        - offers
+      summary: Удаление объявления.
+      description: Удаляет объявление. (Доступно только для авторизованного пользователя, объявление создано данным пользователем).
+
+      responses:
+        "200":
+          description: Объявление удалено.
+
+        "401":
+          description: Пользователь не авторизован.
+
+        "403":
+          description: Пользователь не обладает правами для удаления объявления.
+
+  /offers/premium/{city}:
+    parameters:
+      - in: path
+        name: city
+        required: true
+        schema:
+          type: string
+          enum:
+            - Paris
+            - Cologne
+            - Brussels
+            - Amsterdam
+            - Hamburg
+            - Dusseldorf
+
+    get:
+      tags:
+        - offers
+      summary: Загрузка списка премиальных предложений для конкретного города.
+      description: Получение списка премиальных предложений для конкретного города.
+
+      responses:
+        "201":
+          description: Объекты предложений.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/offer'
+
+  /offers/favorite:
+    get:
+      tags:
+        - offers
+      summary: Загрузка списка избранных предложений.
+      description: Получение списка избранных предложений для конкретного города (доступно только для авторизованных пользователей).
+
+      responses:
+        "201":
+          description: Объекты избранных предложений.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/offer'
+
+  /offers/favorite/{offerId}:
+    parameters:
+      - in: path
+        name: offerId
+        required: true
+        schema:
+          type: integer
+          minimum: 1
+
+    post:
+      tags:
+        - offers
+      summary: Добавление предложения в список избранных.
+      description: Добавляет предложение в список избранных (доступно только для авторизованных пользователей).
+
+      responses:
+        "201":
+          description: Объекты избранных предложений.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/offer'
+
+        "401":
+          description: Пользователь не авторизован.
+
+    delete:
+      tags:
+        - offers
+      summary: Удаление предложения из списка избранных.
+      description: Удаляет предложение из списка избранных (доступно только для авторизованных пользователей).
+
+      responses:
+        "200":
+          description: Предложение удалено из избранных.
+
+        "401":
+          description: Пользователь не авторизован.
+
+  /users/register:
+    post:
+      tags:
+        - users
+      summary: Регистрация пользователя.
+      description: Регистрирует нового пользователя.
+
+      requestBody:
+        description: Информация для создания нового пользователя.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/createUser'
+        required: true
+
+      responses:
+        "201":
+          description: Пользователь зарегистрирован. Объект пользователя.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/user'
+
+        "403":
+          description: Пользователь уже авторизован.
+
+        "409":
+          description: Пользователь с таким email уже существует.
+
+
+  /users/login:
+    get:
+      tags:
+        - users
+      summary: Проверка состояния пользователя
+      description: Возвращает информацию по авторизованному пользователю
+
+      responses:
+        "201":
+          description: Пользователь авторизован.
+
+        "401":
+          description: Пользователь не авторизован.
+
+    post:
+      tags:
+        - users
+      summary: Авторизация пользователя.
+      description: Авторизует пользователя по логину и паролю.
+
+      requestBody:
+        description: Информация для аунтефикации.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/userLogin'
+        required: true
+
+      responses:
+        "201":
+          description: Успешная аунтефикация.
+
+        "403":
+          description: Пользователь уже авторизован.
+
+        "400":
+          description: Введены некорректные данные или пользователя не существует.
+
+  /users/logout:
+    post:
+      tags:
+        - users
+      summary: Завершение пользовательского сеанса.
+      description: Выполняет выход из учетной записи пользователя (доступно только для авторизованных пользователей).
+
+      responses:
+        "200":
+          description: Успешный выход из учетной записи.
+
+        "400":
+          description: Токен не прошел валидацию.
+
+
+  /comments/{offerId}:
+    parameters:
+      - in: path
+        name: offerId
+        required: true
+        schema:
+          type: integer
+          minimum: 1
+
+    get:
+      tags:
+        - comments
+      summary: Загрузка комментариев к объявлению.
+      description: Получение комментарий к объявлению. Не более 50 штук, отсортированы по новизне.
+
+      responses:
+        "201":
+          description: Список объектов комментариев.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/comment'
+
+    post:
+      tags:
+        - comments
+      summary: Добавление комментария к объявлению.
+      description: Добавляет комментарий к объявлению. (доступно только для авторизованных пользователей).
+
+      requestBody:
+        description: Объект нового комментария.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/newComment'
+
+      responses:
+        "201":
+          description: Полный объект нового комментария.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/comment'
+
+components:
+  schemas:
+    offer:
+      type: object
+
+      properties:
+        title:
+          type: string
+          example: apartment rent
+
+        description:
+          type: string
+          example: Wonderful house is located near the forest and the lake
+
+        postDate:
+          type: string
+          format: date-time
+
+        city:
+          type: string
+          example: Paris
+
+        previewImage:
+          type: string
+          example: images/image-1.jpg
+
+        offerImages:
+          type: array
+          items:
+            type: string
+          example: [ images/offer-image-1.jpg, images/offer-image-2.jpg ]
+
+        isPremium:
+          type: boolean
+          example: true
+
+        isFavorites:
+          type: boolean
+          example: false
+
+        rating:
+          type: number
+          example: 4.3
+
+        type:
+          type: string
+          example: apartment
+
+        roomCount:
+          type: number
+          example: 3
+
+        guestsCount:
+          type: number
+          example: 2
+
+        price:
+          type: number
+          example: 1000
+
+        facilities:
+          type: array
+          items:
+            type: string
+          example: [ Breakfast, AirConditioning ]
+
+        user:
+          type: object
+          items:
+            $ref: '#/components/schemas/user'
+
+        commentCount:
+          type: number
+          example: 2
+
+        coordinates:
+          type: object
+          items:
+            $ref: '#/components/schemas/coordinates'
+
+    userLogin:
+      type: object
+
+      properties:
+        email:
+          type: string
+          example: keks@htmlacademy.ru
+        password:
+          type: string
+          example: 123456
+
+    createUser:
+      type: object
+
+      properties:
+        name:
+          type: string
+          example: Keks
+
+        email:
+          type: string
+          example: keks@htmlacademy.ru
+
+        password:
+          type: string
+          example: 123456
+
+        userType:
+          type: string
+          example: pro
+
+        avatarPath:
+          type: string
+          example: avatars/3849673.jpg
+
+    user:
+      type: object
+
+      properties:
+        id:
+          type: string
+          example: 6329c3d6a04ab1061c6425ea
+
+        email:
+          type: string
+          example: keks@htmlacademy.ru
+
+    newComment:
+      type: object
+
+      properties:
+        text:
+          type: string
+          example: Все супер!
+
+        rating:
+          type: number
+          example: 5
+
+    comment:
+      type: object
+
+      properties:
+        text:
+          type: string
+          example: Комментарий
+
+        rating:
+          type: number
+          example: 4
+
+        createdDate:
+          type: string
+          format: date-time
+
+    coordinates:
+      type: object
+
+      properties:
+        latitude:
+          type: string
+          example: 48.85661
+
+        longitude:
+          type: string
+          example: 2.351499
