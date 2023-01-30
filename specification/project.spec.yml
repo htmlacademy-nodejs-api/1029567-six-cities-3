@@ -349,6 +349,18 @@ paths:
 
 components:
   schemas:
+    coordinates:
+      type: object
+
+      properties:
+        latitude:
+          type: string
+          example: 48.85661
+
+        longitude:
+          type: string
+          example: 2.351499
+
     offer:
       type: object
 
@@ -414,8 +426,6 @@ components:
           example: [ Breakfast, AirConditioning ]
 
         user:
-          type: object
-          items:
             $ref: '#/components/schemas/user'
 
         commentCount:
@@ -423,8 +433,6 @@ components:
           example: 2
 
         coordinates:
-          type: object
-          items:
             $ref: '#/components/schemas/coordinates'
 
     userLogin:
@@ -501,15 +509,3 @@ components:
         createdDate:
           type: string
           format: date-time
-
-    coordinates:
-      type: object
-
-      properties:
-        latitude:
-          type: string
-          example: 48.85661
-
-        longitude:
-          type: string
-          example: 2.351499
