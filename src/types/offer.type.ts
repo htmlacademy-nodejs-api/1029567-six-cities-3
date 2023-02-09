@@ -1,13 +1,14 @@
 import { OfferType } from './offer-type.enum.js';
 import { FacilitiesType } from './offer-facilities.enum.js';
 import { User } from './user.type.js';
-import { Coordinate } from './coordinate.type';
+import { Coordinate } from './coordinate.type.js';
+import { OfferCity } from './offer-city.enum.js';
 
 export type Offer = {
   title: string;
   description: string;
   postDate: Date;
-  city: string;
+  city: OfferCity;
   previewImage: string;
   offerImages: string[];
   isPremium: boolean;

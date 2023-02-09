@@ -3,9 +3,10 @@ import { OfferType } from '../../../types/offer-type.enum.js';
 import { FacilitiesType } from '../../../types/offer-facilities.enum.js';
 import UserResponse from '../../user/response/user.response.js';
 import { Coordinate } from '../../../types/coordinate.type.js';
+import { OfferCity } from '../../../types/offer-city.enum.js';
 
 
-export default class CreateOfferDto {
+export default class OfferResponse {
   @Expose()
   public title!: string;
 
@@ -16,7 +17,7 @@ export default class CreateOfferDto {
   public postDate!: Date;
 
   @Expose()
-  public city!: string;
+  public city!: OfferCity;
 
   @Expose()
   public previewImage!: string;
