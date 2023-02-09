@@ -6,7 +6,7 @@ import { OfferEntity } from './offer.entity.js';
 import { Component } from '../../types/component.types.js';
 import { LoggerInterface } from '../../common/logger/logger.interface.js';
 import UpdateOfferDto from './dto/update-offer.dto.js';
-import { DEFAULT_OFFER_COUNT } from './offer.constant.js';
+import { DEFAULT_OFFER_COUNT, DEFAULT_PREMIUM_OFFER_COUNT } from './offer.constant.js';
 import { SortType } from '../../types/sort-type.enum.js';
 
 @injectable()
@@ -40,7 +40,7 @@ export default class OfferService implements OfferServiceInterface {
   }
 
   public async findPremium(city: string, count?: number): Promise<DocumentType<OfferEntity>[]> {
-    const limit = count ?? DEFAULT_OFFER_COUNT;
+    const limit = count ?? DEFAULT_PREMIUM_OFFER_COUNT;
     return this.offerModel
       .find({city: city, isPremium: true}, {}, {limit})
       .sort({postDate: SortType.Down})
@@ -48,10 +48,9 @@ export default class OfferService implements OfferServiceInterface {
       .exec();
   }
 
-  public async findFavorite(count?: number): Promise<DocumentType<OfferEntity>[]> {
-    const limit = count ?? DEFAULT_OFFER_COUNT;
+  public async findFavorite(): Promise<DocumentType<OfferEntity>[]> {
     return this.offerModel
-      .find({isFavorites: true}, {}, {limit})
+      .find({isFavorites: true}, {}, {})
       .populate(['userId'])
       .exec();
   }
@@ -84,23 +83,5 @@ export default class OfferService implements OfferServiceInterface {
       .findByIdAndUpdate(offerId, {'$inc': {
         commentCount: 1,
       }}).exec();
-  }
-
-  public async findNew(count: number): Promise<DocumentType<OfferEntity>[]> {
-    return this.offerModel
-      .find()
-      .sort({createdAt: SortType.Down})
-      .limit(count)
-      .populate(['userId'])
-      .exec();
-  }
-
-  public async findDiscussed(count: number): Promise<DocumentType<OfferEntity>[]> {
-    return this.offerModel
-      .find()
-      .sort({commentCount: SortType.Down})
-      .limit(count)
-      .populate(['userId'])
-      .exec();
   }
 }

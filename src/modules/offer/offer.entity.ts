@@ -3,6 +3,7 @@ import { OfferType } from '../../types/offer-type.enum.js';
 import { UserEntity } from '../user/user.entity.js';
 import { FacilitiesType } from '../../types/offer-facilities.enum.js';
 import { Coordinate } from '../../types/coordinate.type.js';
+import { OfferCity } from '../../types/offer-city.enum.js';
 
 const { prop, modelOptions } = typegoose;
 
@@ -23,8 +24,11 @@ export class OfferEntity extends defaultClasses.TimeStamps {
   @prop({required: true})
   public postDate!: Date;
 
-  @prop({trim: true, required: true})
-  public city!: string;
+  @prop({
+    type: () => String,
+    enum: OfferCity
+  })
+  public city!: OfferCity;
 
   @prop({trim: true, required: true})
   public previewImage!: string;
@@ -34,6 +38,9 @@ export class OfferEntity extends defaultClasses.TimeStamps {
 
   @prop()
   public isPremium!: boolean;
+
+  @prop()
+  public isFavorites!: boolean;
 
   @prop()
   public rating!: number;
