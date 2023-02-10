@@ -1,4 +1,4 @@
-import { IsEmail, IsEnum, IsString, Length, IsOptional } from 'class-validator';
+import { IsEmail, IsEnum, IsString, Length, IsOptional, MaxLength } from 'class-validator';
 import { UserType } from '../../../types/user-type.enum.js';
 
 export default class CreateUserDto {
@@ -10,6 +10,7 @@ export default class CreateUserDto {
   public email!: string;
 
   @IsOptional()
+  @MaxLength(256, { message: 'Too short for field «image»' })
   @IsString({message: 'avatarPath must be string'})
   public avatarPath!: string;
 

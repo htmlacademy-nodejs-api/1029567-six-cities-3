@@ -14,7 +14,10 @@ import {
   MinLength,
   IsBoolean,
   IsObject,
-  IsString
+  IsString,
+  ArrayMinSize,
+  ArrayMaxSize,
+  IsNumber
 } from 'class-validator';
 
 
@@ -33,10 +36,14 @@ export default class CreateOfferDto {
   @IsEnum(OfferCity, {message: '$property should be a value from OfferCity'})
   public city!: OfferCity;
 
+  @MaxLength(256, { message: 'Too short for field «image»' })
   @IsString({ message: 'previewImage must be a string' })
   public previewImage!: string;
 
   @IsArray({message: 'Field facilities must be an array'})
+  @ArrayMinSize(6, { message: '$property must contain exactly $constraint1 items' })
+  @ArrayMaxSize(6, { message: '$property must contain exactly $constraint1 items' })
+  @IsString({ message: '$property must be a string', each: true })
   public offerImages!: string[];
 
   @IsBoolean({message: 'IsPremium must be an boolean'})
@@ -45,9 +52,9 @@ export default class CreateOfferDto {
   @IsBoolean({message: 'IsFavorites must be an boolean'})
   public isFavorites!: boolean;
 
-  @IsInt({message: 'Rating must be an integer'})
+  @IsNumber({ maxDecimalPlaces: 1 }, { message: 'Only 1 digit precision to the right of decimal point is allowed' })
   @Min(1, {message: 'Minimum rating is 1'})
-  @Max(8, {message: 'Maximum rating is 5'})
+  @Max(5, {message: 'Maximum rating is 5'})
   public rating!: number;
 
   @IsEnum(OfferType, {message: '$property should be a value from OfferType'})
