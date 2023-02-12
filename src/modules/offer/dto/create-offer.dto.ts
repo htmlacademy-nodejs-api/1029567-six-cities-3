@@ -7,7 +7,6 @@ import {
   IsDateString,
   IsEnum,
   IsInt,
-  IsMongoId,
   Max,
   MaxLength,
   Min,
@@ -82,7 +81,6 @@ export default class CreateOfferDto {
   })
   public facilities!: FacilitiesType[];
 
-  @IsMongoId({message: 'userId field must be valid an id'})
   public userId!: string;
 
   @IsObject({message: 'coordinates must be an object'})
