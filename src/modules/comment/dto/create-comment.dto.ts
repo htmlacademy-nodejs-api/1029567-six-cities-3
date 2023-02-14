@@ -8,7 +8,6 @@ export default class CreateCommentDto {
   @IsMongoId({message: 'offerId field must be a valid id'})
   public offerId!: string;
 
-  @IsMongoId({message: 'userId field must be a valid id'})
   public userId!: string;
 
   @IsNumber({ maxDecimalPlaces: 1 }, { message: 'Only 1 digit precision to the right of decimal point is allowed' })
