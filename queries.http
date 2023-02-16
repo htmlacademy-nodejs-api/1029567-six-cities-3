@@ -47,6 +47,21 @@ GET http://localhost:4000/offers/63c9a20649ee3997be4f289a HTTP/1.1
 GET http://localhost:4000/offers?limit=1 HTTP/1.1
 
 ###
+
+## Загрузка изображения для объявления
+POST http://localhost:4000/offers/63e3dd99db1aa46bf02eda24/previewImage HTTP/1.1
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InRlc3Q3QG1haWwucnUiLCJpZCI6IjYzZTJhNmZkYzY2NjE0OGM3YmQyYWZiZSIsImlhdCI6MTY3NjUzOTY4MywiZXhwIjoxNjc2NzEyNDgzfQ.im5KLheCVSZLGi_hxYgwW3zSafnhWtKmtdnQJ9oqhKM
+
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="image"; filename="items.jpg"
+Content-Type: image/png
+
+< ./markup/img/amsterdam.jpg
+------WebKitFormBoundary7MA4YWxkTrZu0gW--
+
+###
+
 ## Удаление объявления
 
 DELETE http://localhost:4000/offers/63e2b08306183331d368ef1b HTTP/1.1
@@ -130,12 +145,17 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InRlc3Q3QG1haWwucnUiLCJpZ
 
 ## Отправка аватарки пользователю
 
+## Загрузка аватарки пользователю
+
 POST http://localhost:4000/users/63c9a20649ee3997be4f2897/avatar HTTP/1.1
 Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InRlc3Q3QG1haWwucnUiLCJpZCI6IjYzZTJhNmZkYzY2NjE0OGM3YmQyYWZiZSIsImlhdCI6MTY3NjUzOTY4MywiZXhwIjoxNjc2NzEyNDgzfQ.im5KLheCVSZLGi_hxYgwW3zSafnhWtKmtdnQJ9oqhKM
 
 ------WebKitFormBoundary7MA4YWxkTrZu0gW
-Content-Disposition: form-data; name="avatar"; filename="test.jpg"
+Content-Disposition: form-data; name="avatar"; filename="image.png"
 Content-Type: image/png
 
-< /Users/ostre/Desktop/test-image/test.jpg
+< ./static/default-avatar.jpg
 ------WebKitFormBoundary7MA4YWxkTrZu0gW--
+
+###
