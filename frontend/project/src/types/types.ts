@@ -70,3 +70,9 @@ export type CommentAuth = NewComment &
 export type FavoriteAuth = Offer['id'];
 export type UserRegister = Omit<User, 'avatarUrl'> &
   Pick<UserAuth, 'password'> & { avatar?: File };
+
+export type CommentPost = {
+  comment: string,
+  id: string,
+  rating: number,
+}
