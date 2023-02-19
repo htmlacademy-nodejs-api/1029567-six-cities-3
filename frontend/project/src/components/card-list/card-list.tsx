@@ -14,6 +14,7 @@ import CardListEmpty from '../card-list-empty/card-list-empty';
 
 const CardList = (): JSX.Element => {
   const dispatch = useAppDispatch();
+
   const activeSorting = useAppSelector(getSorting);
   const activeCity = useAppSelector(getCity);
   const isOffersLoading = useAppSelector(getIsOffersLoading);

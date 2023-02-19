@@ -4,6 +4,9 @@ import { OfferType } from '../../../types/offer-type.enum.js';
 
 export default class OffersResponse {
   @Expose()
+  public id!: string;
+
+  @Expose()
   public title!: string;
 
   @Expose()

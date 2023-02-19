@@ -18,29 +18,25 @@ export const adaptUserToClient =
   });
 
 export const adaptOffersToClient =
-  (offers: OfferDto[]): Offer[] =>
-    offers
-      .filter((offer: OfferDto) =>
-        offer.user !== null,
-      )
-      .map((offer: OfferDto) => ({
-        id: offer.id,
-        price: offer.price,
-        rating: offer.rating,
-        title: offer.title,
-        isPremium: offer.isPremium,
-        isFavorite: offer.isFavorites,
-        city: adaptCityToClient(offer.city),
-        location: CityLocation[offer.city],
-        previewImage: offer.previewImage,
-        type: offer.type,
-        bedrooms: offer.roomCount,
-        description: offer.description,
-        goods: offer.facilities,
-        host: adaptUserToClient(offer.user),
-        images: offer.offerImages,
-        maxAdults: offer.guestsCount,
-      }));
+  (offers: OfferDto[]): Offer[] => offers
+    .map((offer: OfferDto) => ({
+      id: offer.id,
+      price: offer.price,
+      rating: offer.rating,
+      title: offer.title,
+      isPremium: offer.isPremium,
+      isFavorite: offer.isFavorites,
+      city: adaptCityToClient(offer.city),
+      location: CityLocation[offer.city],
+      previewImage: offer.previewImage,
+      type: offer.type,
+      bedrooms: 0,
+      description: '',
+      goods: [''],
+      host: {name: '', type: UserType.Regular, email: '', avatarUrl: ''},
+      images: [''],
+      maxAdults: 0,
+    }));
 
 export const adaptOfferToClient =
   (offer: OfferDto): Offer => ({

@@ -119,6 +119,26 @@ export default class OfferController extends Controller {
       method: HttpMethod.Get,
       handler: this.findPremium
     });
+    this.addRoute({
+      path: '/favorite/:offerId',
+      method: HttpMethod.Post,
+      handler: this.setStatusIsFavorite,
+      middlewares: [
+        new PrivateRouteMiddleware(),
+        new ValidateObjectIdMiddleware('offerId'),
+        new DocumentExistsMiddleware(this.offerService, 'Offer', 'offerId'),
+      ]
+    });
+    this.addRoute({
+      path: '/favorite/:offerId',
+      method: HttpMethod.Delete,
+      handler: this.setStatusIsNotFavorite,
+      middlewares: [
+        new PrivateRouteMiddleware(),
+        new ValidateObjectIdMiddleware('offerId'),
+        new DocumentExistsMiddleware(this.offerService, 'Offer', 'offerId'),
+      ]
+    });
   }
 
   public async show(
@@ -165,6 +185,24 @@ export default class OfferController extends Controller {
     res: Response
   ): Promise<void> {
     const updatedOffer = await this.offerService.updateById(params.offerId, body);
+
+    this.ok(res, fillDTO(OfferResponse, updatedOffer));
+  }
+
+  public async setStatusIsFavorite(
+    {params}: Request<core.ParamsDictionary | ParamsGetOffer, object, object>,
+    res: Response
+  ): Promise<void> {
+    const updatedOffer = await this.offerService.updateById(params.offerId, {isFavorites: true});
+
+    this.ok(res, fillDTO(OfferResponse, updatedOffer));
+  }
+
+  public async setStatusIsNotFavorite(
+    {params}: Request<core.ParamsDictionary | ParamsGetOffer, object, object>,
+    res: Response
+  ): Promise<void> {
+    const updatedOffer = await this.offerService.updateById(params.offerId, {isFavorites: false});
 
     this.ok(res, fillDTO(OfferResponse, updatedOffer));
   }

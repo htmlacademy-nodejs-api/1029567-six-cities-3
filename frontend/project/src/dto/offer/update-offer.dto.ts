@@ -1,17 +1,16 @@
-import { OfferType } from './types/offer-type.enum';
-import { FacilitiesType } from './types/offer-facilities.enum';
 import { Coordinate } from './types/coordinate.type';
-import { OfferCity } from './types/offer-city.enum';
 
 
 export default class UpdateOfferDto {
+  public id?: string;
+
   public title?: string;
 
   public description?: string;
 
-  public postDate?: Date;
+  public postDate?: string;
 
-  public city?: OfferCity;
+  public city?: string;
 
   public previewImage?: string;
 
@@ -23,7 +22,7 @@ export default class UpdateOfferDto {
 
   public rating?: number;
 
-  public type?: OfferType;
+  public type?: string;
 
   public roomCount?: number;
 
@@ -31,7 +30,7 @@ export default class UpdateOfferDto {
 
   public price?: number;
 
-  public facilities?: FacilitiesType[];
+  public facilities?: string[];
 
   public coordinates?: Coordinate;
 }

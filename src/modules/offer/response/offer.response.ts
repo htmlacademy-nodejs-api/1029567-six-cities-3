@@ -8,6 +8,9 @@ import { OfferCity } from '../../../types/offer-city.enum.js';
 
 export default class OfferResponse {
   @Expose()
+  public id!: string;
+
+  @Expose()
   public title!: string;
 
   @Expose()

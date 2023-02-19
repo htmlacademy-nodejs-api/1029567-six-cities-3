@@ -19,6 +19,7 @@ export type User = {
   avatarUrl: string;
   type: UserType;
   email: string;
+  token?: string
 };
 
 export type Comment = {

@@ -8,15 +8,20 @@ import {
   adaptOffersToClient,
   adaptCommentToClient,
   adaptOfferToClient,
-  adaptCommentsToClient
+  adaptCommentsToClient,
+  adaptUserToClient,
 } from '../utils/adapters/adaptersToClient';
 import {
   adaptCreateCommentToServer,
-  adaptOfferToServer,
-  adaptSignupToServer
+  adaptEditOfferToServer,
+  adaptCreateOfferToServer,
+  adaptSignupToServer,
+  adaptPreviewImageToServer,
+  adaptImagesToServer,
 } from '../utils/adapters/adaptersToServer';
 import OfferDto from '../dto/offer/offer.dto';
 import CommentDto from '../dto/comment/comment.dto';
+import UserDto from '../dto/user/user.dto';
 
 type Extra = {
   api: AxiosInstance;
@@ -83,8 +88,21 @@ export const postOffer = createAsyncThunk<Offer, NewOffer, { extra: Extra }>(
   Action.POST_OFFER,
   async (newOffer, { extra }) => {
     const { api, history } = extra;
-    const { data } = await api.post<OfferDto>(ApiRoute.Offers, adaptOfferToServer(newOffer));
+    const { data } = await api.post<OfferDto>(ApiRoute.Offers, adaptCreateOfferToServer(newOffer));
     history.push(`${AppRoute.Property}/${data.id}`);
+
+    if (data) {
+
+      const postImageApiRoute = `${ApiRoute.Offers}/${data.id}/previewImage`;
+      await api.post(postImageApiRoute, adaptPreviewImageToServer(newOffer.previewImage), {
+        headers: { 'Content-Type': 'multipart/form-data boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW' },
+      });
+
+      const postImagesApiRoute = `${ApiRoute.Offers}/${data.id}/offerImages`;
+      await api.post(postImagesApiRoute, adaptImagesToServer(newOffer.images), {
+        headers: { 'Content-Type': 'multipart/form-data boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW' },
+      });
+    }
 
     return adaptOfferToClient(data);
   });
@@ -93,7 +111,17 @@ export const editOffer = createAsyncThunk<Offer, Offer, { extra: Extra }>(
   Action.EDIT_OFFER,
   async (offer, { extra }) => {
     const { api, history } = extra;
-    const { data } = await api.patch<OfferDto>(`${ApiRoute.Offers}/${offer.id}`, adaptOfferToServer(offer));
+    const postImageApiRoute = `${ApiRoute.Offers}/${offer.id}/previewImage`;
+    await api.post(postImageApiRoute, adaptPreviewImageToServer(offer.previewImage), {
+      headers: { 'Content-Type': 'multipart/form-data boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW' },
+    });
+
+    const postImagesApiRoute = `${ApiRoute.Offers}/${offer.id}/offerImages`;
+    await api.post(postImagesApiRoute, adaptImagesToServer(offer.images), {
+      headers: { 'Content-Type': 'multipart/form-data boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW' },
+    });
+
+    const { data } = await api.patch<OfferDto>(`${ApiRoute.Offers}/${offer.id}`, adaptEditOfferToServer(offer));
     history.push(`${AppRoute.Property}/${data.id}`);
 
     return adaptOfferToClient(data);
@@ -111,7 +139,7 @@ export const fetchPremiumOffers = createAsyncThunk<Offer[], string, { extra: Ext
   Action.FETCH_PREMIUM_OFFERS,
   async (cityName, { extra }) => {
     const { api } = extra;
-    const { data } = await api.get<OfferDto[]>(`${ApiRoute.Premium}?city=${cityName}`);
+    const { data } = await api.get<OfferDto[]>(`${ApiRoute.Premium}/${cityName}`);
 
     return adaptOffersToClient(data);
   });
@@ -120,20 +148,20 @@ export const fetchComments = createAsyncThunk<Comment[], Offer['id'], { extra: E
   Action.FETCH_COMMENTS,
   async (id, { extra }) => {
     const { api } = extra;
-    const { data } = await api.get<CommentDto[]>(`${ApiRoute.Offers}/${id}${ApiRoute.Comments}`);
+    const { data } = await api.get<CommentDto[]>(`${ApiRoute.Offers}/${id}/comments`);
 
     return adaptCommentsToClient(data);
   });
 
-export const fetchUserStatus = createAsyncThunk<UserAuth['email'], undefined, { extra: Extra }>(
+export const fetchUserStatus = createAsyncThunk<User, undefined, { extra: Extra }>(
   Action.FETCH_USER_STATUS,
   async (_, { extra }) => {
     const { api } = extra;
 
     try {
-      const { data } = await api.get<User>(ApiRoute.Login);
+      const { data } = await api.get<UserDto>(ApiRoute.Login);
 
-      return data.email;
+      return adaptUserToClient(data);
     } catch (error) {
       const axiosError = error as AxiosError;
 
@@ -160,10 +188,7 @@ export const loginUser = createAsyncThunk<UserAuth['email'], UserAuth, { extra: 
 
 export const logoutUser = createAsyncThunk<void, undefined, { extra: Extra }>(
   Action.LOGOUT_USER,
-  async (_, { extra }) => {
-    const { api } = extra;
-    await api.delete(ApiRoute.Logout);
-
+  async () => {
     Token.drop();
   });
 
@@ -180,7 +205,7 @@ export const registerUser = createAsyncThunk<void, UserRegister, { extra: Extra 
     if (avatar) {
       const payload = new FormData();
       payload.append('avatar', avatar);
-      await api.post(`/${data.id}${ApiRoute.Avatar}`, payload, {
+      await api.post(`${ApiRoute.Users}/${data.id}/avatar`, payload, {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
     }
@@ -192,7 +217,7 @@ export const postComment = createAsyncThunk<Comment, CommentAuth, { extra: Extra
   Action.POST_COMMENT,
   async ({ id, comment, rating }, { extra }) => {
     const { api } = extra;
-    const { data } = await api.post<CommentDto>(`${ApiRoute.Offers}/${id}${ApiRoute.Comments}`, adaptCreateCommentToServer({ id, comment, rating }));
+    const { data } = await api.post<CommentDto>(`${ApiRoute.Comments}`, adaptCreateCommentToServer({ id, comment, rating }));
 
     return adaptCommentToClient(data);
   });

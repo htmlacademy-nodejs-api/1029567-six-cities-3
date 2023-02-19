@@ -1,5 +1,6 @@
 import CreateUserDto from '../../dto/user/create-user.dto';
 import CreateOfferDto from '../../dto/offer/create-offer.dto';
+import UpdateOfferDto from '../../dto/offer/update-offer.dto';
 import CreateCommentDto from '../../dto/comment/create-comment.dto';
 import { getTime } from '../utils';
 import { UserRegister, CommentPost, NewOffer } from '../../types/types';
@@ -13,13 +14,34 @@ export const adaptSignupToServer =
     userType: user.type === 'regular' ? UserType.normal : UserType.pro,
   });
 
-export const adaptOfferToServer =
+export const adaptEditOfferToServer =
+  (offer: NewOffer): UpdateOfferDto => ({
+    title: offer.title,
+    description: offer.description,
+    postDate: getTime(),
+    city: offer.city.name,
+    isPremium: offer.isPremium,
+    isFavorites: false,
+    rating: 3,
+    type: offer.type,
+    roomCount: offer.bedrooms,
+    guestsCount: offer.maxAdults,
+    price: offer.price,
+    facilities: offer.goods,
+    coordinates: {
+      latitude: offer.location.latitude.toString(),
+      longitude: offer.location.longitude.toString()
+    },
+  });
+
+export const adaptCreateOfferToServer =
   (offer: NewOffer): CreateOfferDto => ({
     title: offer.title,
     description: offer.description,
     postDate: getTime(),
     city: offer.city.name,
     isPremium: offer.isPremium,
+    isFavorites: false,
     rating: 3,
     type: offer.type,
     roomCount: offer.bedrooms,
@@ -47,10 +69,20 @@ export const adaptAvatarToServer =
     return formData;
   };
 
-export const adaptImageToServer =
+export const adaptPreviewImageToServer =
   (file: string) => {
     const formData = new FormData();
-    formData.set('image', file);
+    formData.set('previewImage', file);
 
+    return formData;
+  };
+
+export const adaptImagesToServer =
+  (files: string[]) => {
+    const formData = new FormData();
+
+    for(let i = 0; i < files.length; i++){
+      formData.append('offerImages', files[i]);
+    }
     return formData;
   };
