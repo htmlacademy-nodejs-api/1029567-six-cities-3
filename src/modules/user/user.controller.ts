@@ -123,11 +123,6 @@ export default class UserController extends Controller {
     }
 
     const user = await this.userService.findByEmail(req.user.email);
-
-    // Можно добавить проверку, что `findByEmail` действительно
-    // находит пользователя в базе. Если пользователи не удаляются,
-    // проверки можно избежать.
-
     this.ok(res, fillDTO(LoggedUserResponse, user));
   }
 }
